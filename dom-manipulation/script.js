@@ -1,6 +1,6 @@
 let quotes = [];
 let selectedCategory = localStorage.getItem("selectedCategory") || "all";
-const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock server
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
 
 // Load quotes from localStorage
 function loadQuotes() {
@@ -165,48 +165,51 @@ function filterQuotes() {
   });
 }
 
-// Fetch quotes from server (simulated)
-function fetchQuotesFromServer() {
-  return fetch(SERVER_URL)
-    .then(res => res.json())
-    .then(serverData => {
-      return serverData.slice(0, 5).map(post => ({
-        text: post.title,
-        category: "Server"
-      }));
-    });
+// ✅ Fetch quotes from server using async/await
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+    return serverData.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+  } catch (error) {
+    console.error("Error fetching from server:", error);
+    return [];
+  }
 }
 
-// Sync with server and resolve conflicts
-function syncWithServer() {
+// ✅ Sync with server using async/await
+async function syncWithServer() {
   const status = document.getElementById("syncStatus");
   status.style.color = "black";
   status.textContent = "Syncing with server...";
 
-  fetchQuotesFromServer()
-    .then(serverQuotes => {
-      const localQuotes = localStorage.getItem("quotes");
-      const localData = localQuotes ? JSON.parse(localQuotes) : [];
+  try {
+    const serverQuotes = await fetchQuotesFromServer();
+    const localQuotes = localStorage.getItem("quotes");
+    const localData = localQuotes ? JSON.parse(localQuotes) : [];
 
-      const conflict = JSON.stringify(localData.slice(0, 5)) !== JSON.stringify(serverQuotes);
+    const conflict = JSON.stringify(localData.slice(0, 5)) !== JSON.stringify(serverQuotes);
 
-      if (conflict) {
-        quotes = [...serverQuotes];
-        saveQuotes();
-        populateCategories();
-        filterQuotes();
+    if (conflict) {
+      quotes = [...serverQuotes];
+      saveQuotes();
+      populateCategories();
+      filterQuotes();
 
-        status.style.color = "orange";
-        status.textContent = "Conflict detected. Local data replaced with server quotes.";
-      } else {
-        status.style.color = "green";
-        status.textContent = "No conflicts. Local data is up to date.";
-      }
-    })
-    .catch(() => {
-      status.style.color = "red";
-      status.textContent = "Failed to sync with server.";
-    });
+      status.style.color = "orange";
+      status.textContent = "Conflict detected. Local data replaced with server quotes.";
+    } else {
+      status.style.color = "green";
+      status.textContent = "No conflicts. Local data is up to date.";
+    }
+  } catch (err) {
+    status.style.color = "red";
+    status.textContent = "Failed to sync with server.";
+    console.error("Sync failed:", err);
+  }
 }
 
 // Auto sync every 30 seconds
