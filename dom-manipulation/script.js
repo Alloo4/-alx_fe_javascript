@@ -79,7 +79,7 @@ function addQuote() {
   saveQuotes();
   populateCategories();
   filterQuotes();
-  postQuoteToServer(newQuote); // ✅ post it to server
+  postQuoteToServer(newQuote); // Post to server
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
@@ -167,7 +167,7 @@ function filterQuotes() {
   });
 }
 
-// ✅ Fetch quotes from server using async/await
+// Fetch quotes from server (mock)
 async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
@@ -182,7 +182,7 @@ async function fetchQuotesFromServer() {
   }
 }
 
-// ✅ Post a quote to the server using POST (mock simulation)
+// Post a new quote to the server
 async function postQuoteToServer(quote) {
   try {
     const response = await fetch(SERVER_URL, {
@@ -200,8 +200,8 @@ async function postQuoteToServer(quote) {
   }
 }
 
-// ✅ Sync with server using async/await
-async function syncWithServer() {
+// ✅ syncQuotes function (renamed from syncWithServer)
+async function syncQuotes() {
   const status = document.getElementById("syncStatus");
   status.style.color = "black";
   status.textContent = "Syncing with server...";
@@ -233,7 +233,7 @@ async function syncWithServer() {
 }
 
 // Auto sync every 30 seconds
-setInterval(syncWithServer, 30000);
+setInterval(syncQuotes, 30000);
 
 // Initialize app
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
@@ -246,3 +246,4 @@ const lastQuote = sessionStorage.getItem("lastViewedQuote");
 if (lastQuote) {
   document.getElementById("quoteDisplay").textContent = `"${lastQuote}"`;
 }
+
