@@ -1,6 +1,6 @@
 let quotes = [];
 let selectedCategory = localStorage.getItem("selectedCategory") || "all";
-const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock server
 
 // Load quotes from localStorage
 function loadQuotes() {
@@ -74,10 +74,12 @@ function addQuote() {
     return;
   }
 
-  quotes.push({ text, category });
+  const newQuote = { text, category };
+  quotes.push(newQuote);
   saveQuotes();
   populateCategories();
   filterQuotes();
+  postQuoteToServer(newQuote); // ✅ post it to server
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
@@ -180,6 +182,24 @@ async function fetchQuotesFromServer() {
   }
 }
 
+// ✅ Post a quote to the server using POST (mock simulation)
+async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch(SERVER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(quote)
+    });
+
+    const result = await response.json();
+    console.log("Posted to server:", result);
+  } catch (error) {
+    console.error("Error posting quote to server:", error);
+  }
+}
+
 // ✅ Sync with server using async/await
 async function syncWithServer() {
   const status = document.getElementById("syncStatus");
@@ -226,4 +246,3 @@ const lastQuote = sessionStorage.getItem("lastViewedQuote");
 if (lastQuote) {
   document.getElementById("quoteDisplay").textContent = `"${lastQuote}"`;
 }
-
