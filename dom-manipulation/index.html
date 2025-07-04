@@ -13,18 +13,24 @@
 <body>
   <h1>Dynamic Quote Generator</h1>
 
-  <!-- Display Random Quote -->
+  <!-- Quote display -->
   <div id="quoteDisplay">Click "Show New Quote" to get a quote!</div>
 
-  <!-- Category Selector for Random Quote -->
+  <!-- Category selection and quote button -->
   <div class="form-group">
     <label for="categorySelect">Choose category:</label>
     <select id="categorySelect"></select>
     <button id="newQuote">Show New Quote</button>
   </div>
 
-  <!-- The dynamic form will be inserted below by createAddQuoteForm() -->
+  <!-- Form will be created here -->
   
+  <!-- Import/Export -->
+  <h2>Import/Export Quotes</h2>
+  <button onclick="exportQuotesToJson()">Export Quotes</button>
+  <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+
   <script src="script.js"></script>
 </body>
 </html>
+
