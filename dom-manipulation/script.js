@@ -79,7 +79,7 @@ function addQuote() {
   saveQuotes();
   populateCategories();
   filterQuotes();
-  postQuoteToServer(newQuote); // Post to server
+  postQuoteToServer(newQuote);
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
@@ -167,7 +167,7 @@ function filterQuotes() {
   });
 }
 
-// Fetch quotes from server (mock)
+// Fetch quotes from server
 async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
@@ -200,7 +200,7 @@ async function postQuoteToServer(quote) {
   }
 }
 
-// ✅ syncQuotes function (renamed from syncWithServer)
+// ✅ syncQuotes with UI notification
 async function syncQuotes() {
   const status = document.getElementById("syncStatus");
   status.style.color = "black";
@@ -223,7 +223,7 @@ async function syncQuotes() {
       status.textContent = "Conflict detected. Local data replaced with server quotes.";
     } else {
       status.style.color = "green";
-      status.textContent = "No conflicts. Local data is up to date.";
+      status.textContent = "Quotes synced with server!"; // ✅ required message
     }
   } catch (err) {
     status.style.color = "red";
@@ -246,4 +246,5 @@ const lastQuote = sessionStorage.getItem("lastViewedQuote");
 if (lastQuote) {
   document.getElementById("quoteDisplay").textContent = `"${lastQuote}"`;
 }
+
 
